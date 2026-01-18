@@ -37,6 +37,7 @@ interface AppState {
   actions: {
     setLoading: (loading: boolean) => void;
     setError: (error: string | null) => void;
+    setReport: (report: ReportData | null) => void;
   };
   ui: {
     showMobileOpportunities: boolean;
