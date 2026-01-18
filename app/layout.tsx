@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://pagespeed.export",
+    url: "https://pagespeedexport.surajon.dev",
     title: "PageSpeed Export - Free PDF, Markdown & TOON Reports",
     description:
       "Analyze your website performance with Google PageSpeed Insights and export detailed reports in PDF, Markdown, and TOON formats.",

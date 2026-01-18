@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/"],
     },
-    sitemap: "https://pagespeed.export/sitemap.xml",
+    sitemap: "https://pagespeedexport.surajon.dev/sitemap.xml",
   };
 }

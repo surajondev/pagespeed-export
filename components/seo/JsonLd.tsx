@@ -12,6 +12,7 @@ export function JsonLd() {
       price: "0",
       priceCurrency: "USD",
     },
+    url: "https://pagespeedexport.surajon.dev",
     description:
       "Analyze your website performance with Google PageSpeed Insights and export detailed reports in PDF, Markdown, and TOON formats. Free and no login required.",
     featureList: [
