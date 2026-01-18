@@ -3,10 +3,13 @@
 import { useAppStore } from "@/lib/store/appStore";
 import { motion } from "framer-motion";
 import { ExportMenu } from "./ExportMenu";
-// Will import sub-components later: ScoreCard, MetricsGrid, ExportActions
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { useAppUI } from "@/lib/store/appStore";
 
 export function ReportDashboard() {
   const report = useAppStore((state) => state.report);
+  const ui = useAppUI();
 
   if (!report) return null;
 
@@ -61,20 +64,41 @@ export function ReportDashboard() {
 
           {/* Opportunities Mobile */}
           <div className="mt-8 flex-1">
-            <h4 className="text-sm font-semibold mb-3 uppercase tracking-wider text-muted-foreground">
-              Top Opportunities
-            </h4>
-            <div className="space-y-3">
-              {report.mobileAudits?.length > 0 ? (
-                report.mobileAudits.map((audit) => (
-                  <AuditItem key={audit.id} audit={audit} />
-                ))
-              ) : (
-                <div className="text-sm text-emerald-500">
-                  No major issues found!
-                </div>
-              )}
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                Top Opportunities
+              </h4>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="mobile-opps"
+                  checked={ui.showMobileOpportunities}
+                  onCheckedChange={ui.toggleMobileOpportunities}
+                />
+                <Label htmlFor="mobile-opps" className="text-xs">
+                  Show
+                </Label>
+              </div>
             </div>
+
+            {ui.showMobileOpportunities && (
+              <div className="space-y-3">
+                {report.mobileAudits?.length > 0 ? (
+                  report.mobileAudits.map((audit) => (
+                    <AuditItem key={audit.id} audit={audit} />
+                  ))
+                ) : (
+                  <div className="text-sm text-emerald-500">
+                    No major issues found!
+                  </div>
+                )}
+              </div>
+            )}
+            {!ui.showMobileOpportunities && (
+              <div className="text-sm text-muted-foreground italic border-l-2 border-muted pl-3 py-1">
+                Hiding {report.mobileAudits?.length || 0} opportunities (will
+                not be exported).
+              </div>
+            )}
           </div>
         </div>
 
@@ -115,20 +139,41 @@ export function ReportDashboard() {
 
           {/* Opportunities Desktop */}
           <div className="mt-8 flex-1">
-            <h4 className="text-sm font-semibold mb-3 uppercase tracking-wider text-muted-foreground">
-              Top Opportunities
-            </h4>
-            <div className="space-y-3">
-              {report.desktopAudits?.length > 0 ? (
-                report.desktopAudits.map((audit) => (
-                  <AuditItem key={audit.id} audit={audit} />
-                ))
-              ) : (
-                <div className="text-sm text-emerald-500">
-                  No major issues found!
-                </div>
-              )}
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                Top Opportunities
+              </h4>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="desktop-opps"
+                  checked={ui.showDesktopOpportunities}
+                  onCheckedChange={ui.toggleDesktopOpportunities}
+                />
+                <Label htmlFor="desktop-opps" className="text-xs">
+                  Show
+                </Label>
+              </div>
             </div>
+
+            {ui.showDesktopOpportunities && (
+              <div className="space-y-3">
+                {report.desktopAudits?.length > 0 ? (
+                  report.desktopAudits.map((audit) => (
+                    <AuditItem key={audit.id} audit={audit} />
+                  ))
+                ) : (
+                  <div className="text-sm text-emerald-500">
+                    No major issues found!
+                  </div>
+                )}
+              </div>
+            )}
+            {!ui.showDesktopOpportunities && (
+              <div className="text-sm text-muted-foreground italic border-l-2 border-muted pl-3 py-1">
+                Hiding {report.desktopAudits?.length || 0} opportunities (will
+                not be exported).
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -14,7 +14,10 @@ import { ReportData } from "@/lib/store/appStore";
  *    i: SI
  * a: audits (m: mobile, d: desktop) - List of { t: title, v: displayValue, c: category, d: description }
  */
-export const convertToTOON = (data: ReportData | null) => {
+export const convertToTOON = (
+  data: ReportData | null,
+  options?: { showMobileAudits: boolean; showDesktopAudits: boolean },
+) => {
   if (!data) return "";
 
   const mapMetrics = (metrics: any) => ({
@@ -49,8 +52,8 @@ export const convertToTOON = (data: ReportData | null) => {
       d: mapMetrics(data.desktopMetrics),
     },
     a: {
-      m: mapAudits(data.mobileAudits),
-      d: mapAudits(data.desktopAudits),
+      m: options?.showMobileAudits ? mapAudits(data.mobileAudits) : [],
+      d: options?.showDesktopAudits ? mapAudits(data.desktopAudits) : [],
     },
   };
 

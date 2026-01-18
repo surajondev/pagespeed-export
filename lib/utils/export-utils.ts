@@ -4,13 +4,21 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { saveAs } from "file-saver";
 
-export const downloadTOON = (report: ReportData) => {
-  const toonString = convertToTOON(report);
+interface ExportOptions {
+  showMobileAudits: boolean;
+  showDesktopAudits: boolean;
+}
+
+export const downloadTOON = (report: ReportData, options: ExportOptions) => {
+  const toonString = convertToTOON(report, options);
   const blob = new Blob([toonString], { type: "application/json" });
   saveAs(blob, `psi-report-${new Date().getTime()}.json`);
 };
 
-export const generateMarkdown = (report: ReportData) => {
+export const generateMarkdown = (
+  report: ReportData,
+  options: ExportOptions,
+) => {
   return `# PageSpeed Insights Report
 URL: ${report.url}
 Date: ${new Date().toLocaleString()}
@@ -40,7 +48,7 @@ ${Object.entries(report.mobileMetrics)
   .join("\n")}
 
 ### Top Opportunities (Mobile)
-${report.mobileAudits?.map((a) => `- [${a.category?.toUpperCase() || "PERF"}] **${a.title}** (${a.displayValue || "N/A"}): ${a.description} (Score: ${a.score})`).join("\n") || "None"}
+${options.showMobileAudits ? report.mobileAudits?.map((a) => `- [${a.category?.toUpperCase() || "PERF"}] **${a.title}** (${a.displayValue || "N/A"}): ${a.description} (Score: ${a.score})`).join("\n") || "None" : "(Hidden in report)"}
 
 ## Desktop Metrics
 | Metric | Value | Score |
@@ -53,17 +61,20 @@ ${Object.entries(report.desktopMetrics)
   .join("\n")}
 
 ### Top Opportunities (Desktop)
-${report.desktopAudits?.map((a) => `- [${a.category?.toUpperCase() || "PERF"}] **${a.title}** (${a.displayValue || "N/A"}): ${a.description} (Score: ${a.score})`).join("\n") || "None"}
+${options.showDesktopAudits ? report.desktopAudits?.map((a) => `- [${a.category?.toUpperCase() || "PERF"}] **${a.title}** (${a.displayValue || "N/A"}): ${a.description} (Score: ${a.score})`).join("\n") || "None" : "(Hidden in report)"}
 `;
 };
 
-export const downloadMarkdown = (report: ReportData) => {
-  const md = generateMarkdown(report);
+export const downloadMarkdown = (
+  report: ReportData,
+  options: ExportOptions,
+) => {
+  const md = generateMarkdown(report, options);
   const blob = new Blob([md], { type: "text/markdown" });
   saveAs(blob, `psi-report-${new Date().getTime()}.md`);
 };
 
-export const downloadPDF = (report: ReportData) => {
+export const downloadPDF = (report: ReportData, options: ExportOptions) => {
   const doc = new jsPDF();
 
   doc.setFontSize(20);
@@ -115,7 +126,7 @@ export const downloadPDF = (report: ReportData) => {
     body: mobileRows,
   });
 
-  if (report.mobileAudits?.length) {
+  if (report.mobileAudits?.length && options.showMobileAudits) {
     doc.text(
       "Mobile Opportunities",
       14,
@@ -153,7 +164,7 @@ export const downloadPDF = (report: ReportData) => {
     body: desktopRows,
   });
 
-  if (report.desktopAudits?.length) {
+  if (report.desktopAudits?.length && options.showDesktopAudits) {
     doc.text(
       "Desktop Opportunities",
       14,

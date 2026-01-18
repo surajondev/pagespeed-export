@@ -37,7 +37,12 @@ interface AppState {
   actions: {
     setLoading: (loading: boolean) => void;
     setError: (error: string | null) => void;
-    setReport: (report: ReportData | null) => void;
+  };
+  ui: {
+    showMobileOpportunities: boolean;
+    showDesktopOpportunities: boolean;
+    toggleMobileOpportunities: () => void;
+    toggleDesktopOpportunities: () => void;
   };
 }
 
@@ -50,6 +55,25 @@ export const useAppStore = create<AppState>((set) => ({
     setError: (error) => set({ error }),
     setReport: (report) => set({ report }),
   },
+  ui: {
+    showMobileOpportunities: false,
+    showDesktopOpportunities: false,
+    toggleMobileOpportunities: () =>
+      set((state) => ({
+        ui: {
+          ...state.ui,
+          showMobileOpportunities: !state.ui.showMobileOpportunities,
+        },
+      })),
+    toggleDesktopOpportunities: () =>
+      set((state) => ({
+        ui: {
+          ...state.ui,
+          showDesktopOpportunities: !state.ui.showDesktopOpportunities,
+        },
+      })),
+  },
 }));
 
 export const useAppActions = () => useAppStore((state) => state.actions);
+export const useAppUI = () => useAppStore((state) => state.ui);
